@@ -14,48 +14,70 @@ import security.PasswordStorage;
 
 public class UserFacade implements IUserFacade {
 
-  EntityManagerFactory emf = Persistence.createEntityManagerFactory(DeploymentConfiguration.PU_NAME);
+    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory(DeploymentConfiguration.PU_NAME);
 
-  public UserFacade() {
+   
 
-  }
+    public UserFacade() {
 
-  @Override
-  public IUser getUserByUserId(String id) {
-    EntityManager em = emf.createEntityManager();
-    try {
-      return em.find(User.class, id);
-    } finally {
-      em.close();
     }
-  }
-  /*
-   Return the Roles if users could be authenticated, otherwise null
-   */
 
-  @Override
-  /*
-   Return the Roles if users could be authenticated, otherwise null
-   */
-  public List<String> authenticateUser(String userName, String password) {
-    EntityManager em = emf.createEntityManager();
-    try {
-      User user = em.find(User.class, userName);
-      if (user == null) {
-        return null;
-      }
-
-      boolean authenticated;
-      try {
-        authenticated = PasswordStorage.verifyPassword(password, user.getPassword());
-        return authenticated ? user.getRolesAsStrings() : null;
-      } catch (PasswordStorage.CannotPerformOperationException | PasswordStorage.InvalidHashException ex) {
-        Logger.getLogger(UserFacade.class.getName()).log(Level.SEVERE, null, ex);
-        return null;
-      }
-    } finally {
-      em.close();
+    @Override
+    public IUser getUserByUserId(String id) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.find(User.class, id);
+        } finally {
+            em.close();
+        }
     }
-  }
+    
+    public static User getUser(String id) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.find(User.class, id);
+        } finally {
+            em.close();
+        }
+    }
+    /*
+     Return the Roles if users could be authenticated, otherwise null
+     */
+
+    @Override
+    /*
+     Return the Roles if users could be authenticated, otherwise null
+     */
+    public List<String> authenticateUser(String userName, String password) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            User user = em.find(User.class, userName);
+            if (user == null) {
+                return null;
+            }
+
+            boolean authenticated;
+            try {
+                authenticated = PasswordStorage.verifyPassword(password, user.getPassword());
+                return authenticated ? user.getRolesAsStrings() : null;
+            } catch (PasswordStorage.CannotPerformOperationException | PasswordStorage.InvalidHashException ex) {
+                Logger.getLogger(UserFacade.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            }
+        } finally {
+            em.close();
+        }
+    }
+
+    public static void registerNewUser(User user) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.persist(user);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
 
 }
