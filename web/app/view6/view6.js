@@ -11,13 +11,18 @@ angular.module('myApp.view6', ['ngRoute'])
             }])
 
         .controller('View6Ctrl', function ($http, $scope) {
-            $http({
-                method: 'GET',
-                url: 'api/demouser'
-            }).then(function successCallback(res) {
-                $scope.data = res.data.message;
-            }, function errorCallback(res) {
-                $scope.error = res.status + ": " + res.data.statusText;
-            });
+            $scope.newuser = {
+            };
+            $scope.postnewuser = function () {
+                $http({
+                    method: 'POST',
+                    url: 'api/newuser',
+                    data: $scope.newuser
+                }).then(function successCallback(res) {
+                    $scope.data = res.data.message;
+                }, function errorCallback(res) {
+                    $scope.error = res.status + ": you are a faggot" + res.data.statusText;
+                });
+            }
 
         });

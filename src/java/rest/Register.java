@@ -7,6 +7,9 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import entity.Role;
 import facades.UserFacade;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -39,15 +42,18 @@ public class Register {
     @POST
     @Consumes("application/json")
     public void newUser(String userJson) {
-        entity.User user = gson.fromJson(userJson, entity.User.class);
+        JsonObject newUser = new JsonParser().parse(userJson).getAsJsonObject();
+        entity.User user = new entity.User();
+        user.setUserName(newUser.get("username").getAsString());
+        user.setPassword(newUser.get("password").getAsString());
         UserFacade.registerNewUser(user);
     }
-    
-    @GET
-    @Path("/{id}")
-    @Produces("application/json") //"application/json"
-    public String getBook(@PathParam("id") String userName) {
-        entity.User user = UserFacade.getUser(userName);
-        return gson.toJson(user);
-    }
+
+//    @GET
+//    @Path("/{id}")
+//    @Produces("application/json") //"application/json"
+//    public String getBook(@PathParam("id") String userName) {
+//        entity.User user = UserFacade.getUser(userName);
+//        return gson.toJson(user);
+//    }
 }

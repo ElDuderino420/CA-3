@@ -1,5 +1,6 @@
 package facades;
 
+import entity.Role;
 import security.IUserFacade;
 import entity.User;
 import java.util.List;
@@ -16,8 +17,6 @@ public class UserFacade implements IUserFacade {
 
     private static EntityManagerFactory emf = Persistence.createEntityManagerFactory(DeploymentConfiguration.PU_NAME);
 
-   
-
     public UserFacade() {
 
     }
@@ -31,7 +30,7 @@ public class UserFacade implements IUserFacade {
             em.close();
         }
     }
-    
+
     public static User getUser(String id) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -73,8 +72,13 @@ public class UserFacade implements IUserFacade {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
+            user.setPassword(PasswordStorage.createHash(user.getPassword()));
+            Role userRole = em.find(Role.class, "User");
+            user.AddRole(userRole);
             em.persist(user);
             em.getTransaction().commit();
+        } catch (PasswordStorage.CannotPerformOperationException ex) {
+            Logger.getLogger(UserFacade.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             em.close();
         }
