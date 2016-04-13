@@ -19,10 +19,10 @@ angular.module('myApp.view6', ['ngRoute'])
                     url: 'api/newuser',
                     data: $scope.newuser
                 }).then(function successCallback(res) {
-                    $scope.data = res.data.message;
+                    $scope.isRegistered = true;
                 }, function errorCallback(res) {
-                    $scope.error = res.status + ": you are a faggot" + res.data.statusText;
+                    $scope.error = res.status + ": " + res.data.statusText;
                 });
-            }
+            };
 
         });
