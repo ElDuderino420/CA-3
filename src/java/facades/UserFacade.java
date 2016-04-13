@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import openshift_deploy.DeploymentConfiguration;
 import security.IUser;
 import security.PasswordStorage;
@@ -35,6 +36,30 @@ public class UserFacade implements IUserFacade {
         EntityManager em = emf.createEntityManager();
         try {
             return em.find(User.class, id);
+        } finally {
+            em.close();
+        }
+    }
+    
+    public static List<User> getAllUser(){
+        EntityManager em = emf.createEntityManager();
+        try {
+            List<User> users;
+            Query q = em.createQuery("SELECT c from User c");
+            users = q.getResultList();
+            return users;
+        } finally {
+        }
+    }
+    
+    public static User deleteUser(int id) {
+       EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            User u = em.find(User.class, id);
+            em.remove(u);
+            em.getTransaction().commit();
+            return u;
         } finally {
             em.close();
         }
