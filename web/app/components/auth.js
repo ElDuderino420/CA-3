@@ -88,6 +88,31 @@ angular.module('myApp.security', [])
                 });
             };
 
+            $rootScope.openSignupModal = function () {
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'signupModal.html',
+                    controller: function ($scope, $uibModalInstance, $http) {
+                        
+                        $scope.ok = function () {
+                            $uibModalInstance.close();
+                        };
+                        $scope.postnewuser = function () {
+                            $http({
+                                method: 'POST',
+                                url: 'api/newuser',
+                                data: $scope.newuser
+                            }).then(function successCallback(res) {
+                                $scope.isRegistered = true;
+                            }, function errorCallback(res) {
+                                $scope.error = res.status + ": " + res.data.statusText;
+                            });
+                        };
+                    },
+                    size: 'sm'
+                });
+            };
+
             //This sets the login data from session store if user pressed F5 (You are still logged in)
             var init = function () {
                 var token = $window.sessionStorage.id_token;
