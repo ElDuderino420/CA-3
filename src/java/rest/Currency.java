@@ -46,8 +46,8 @@ public class Currency {
     @Path("/getRates")
     public void getJson() {
         //TODO return proper representation object
-        RateFacade rf = new RateFacade();
-        rf.getRates();
+        
+        
         
     }
 

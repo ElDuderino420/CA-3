@@ -22,6 +22,7 @@ public class Rate implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     
+    
     double rate;
     String disc;
     String code;

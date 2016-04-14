@@ -30,7 +30,7 @@ public class DailyRate implements Serializable {
     
     @Temporal(javax.persistence.TemporalType.DATE)
     Date currentDate;
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     List<Rate> rateList = new ArrayList();
 
     public Date getDate() {

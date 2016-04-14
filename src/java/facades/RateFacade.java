@@ -12,20 +12,18 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.Root;
 import openshift_deploy.DeploymentConfiguration;
 
 /**
  *
  * @author butwhole
  */
-public class RateFacade extends DefaultHandler {
+public class RateFacade extends DefaultHandler implements Runnable{
 
     DailyRate currency;
     private static EntityManagerFactory emf = Persistence.createEntityManagerFactory(DeploymentConfiguration.PU_NAME);
@@ -53,9 +51,13 @@ public class RateFacade extends DefaultHandler {
         try {
 
             em.getTransaction().begin();
-            Query q = em.createQuery("DELETE FROM DailyRate c WHERE c.currentDate = :d");
+            Query q = em.createQuery("SELECT c FROM DailyRate c WHERE c.currentDate = :d");
             
-            q.setParameter("d", new Date()).executeUpdate();
+            q.setParameter("d", new Date());
+            List<DailyRate> dr = q.getResultList();
+            if(!dr.isEmpty()){
+            em.remove(dr.get(0));
+                    }
             em.getTransaction().commit();
 
             currency = new DailyRate();
@@ -81,6 +83,7 @@ public class RateFacade extends DefaultHandler {
         } finally {
             em.close();
         }
+        
     }
 
     @Override
@@ -107,15 +110,25 @@ public class RateFacade extends DefaultHandler {
             xr.setContentHandler(new RateFacade());
             URL url = new URL("http://www.nationalbanken.dk/_vti_bin/DN/DataService.svc/CurrencyRatesXML?lang=en");
             xr.parse(new InputSource(url.openStream()));
-
+            
         } catch (SAXException | IOException e) {
             e.printStackTrace();
 
         }
+        
     }
 
-    public static void main(String[] args) {
+//    public static void main(String[] args) {
+//        RateFacade rf = new RateFacade();
+//        rf.getRates();
+//    }
+
+    @Override
+    public void run() {
         RateFacade rf = new RateFacade();
         rf.getRates();
     }
-}
+
+
+    }
+
