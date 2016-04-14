@@ -5,11 +5,13 @@ angular.module('myApp.view3', ['ngRoute'])
         .config(['$routeProvider', function ($routeProvider) {
                 $routeProvider.when('/view3', {
                     templateUrl: 'app/view3/view3.html',
-                    controller: 'View3Ctrl'
+                    controller: 'View3Ctrl',
+                    isUser: 'true'
                 });
             }])
 
-        .controller('View3Ctrl', function ($http, $scope) {
+        .controller('View3Ctrl', function ($http, $scope, $location) {
+
             $scope.isFound = false;
             $scope.searchText = null;
             $scope.selectedOption = null;
@@ -37,10 +39,21 @@ angular.module('myApp.view3', ['ngRoute'])
                 }).then(function successCallback(res) {
                     $scope.foundCompany = res.data;
                     $scope.isFound = true;
+                    if (res.data.error === "NO_SEARCH") {
+                        $scope.isFound = false;
+                        $scope.openErrorModal("Please input a valid search text");
+                    }
                 }, function errorCallback(res) {
                     $scope.error = res.status + ": " + res.data.statusText;
                 });
             };
+
+            $scope.$watch('isUser', function () {
+                if ($scope.isUser === false) {
+                    $scope.openErrorModal("You are not authorized to perform the requested operation. Please login as a user.");
+                    $location.path("#/view1");
+                }
+            });
 
 
         });
