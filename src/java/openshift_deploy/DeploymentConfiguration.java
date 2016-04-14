@@ -5,10 +5,14 @@ package openshift_deploy;
 
 import entity.Role;
 import entity.User;
+import facades.RateFacade;
 import facades.UserFacade;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -25,9 +29,10 @@ import security.PasswordStorage;
 public class DeploymentConfiguration implements ServletContextListener {
 
   public static String PU_NAME = "PU-Local";
-
+  private ScheduledExecutorService scheduler;
   @Override
   public void contextInitialized(ServletContextEvent sce) {
+      
       //If we are testing, then this:
      if(sce.getServletContext().getInitParameter("testEnv")!=null){
          PU_NAME="PU_TEST";
@@ -59,6 +64,7 @@ public class DeploymentConfiguration implements ServletContextListener {
       both.AddRole(userRole);
       both.AddRole(adminRole);
 
+      
       try {
         em.getTransaction().begin();
         em.persist(userRole);
@@ -71,6 +77,9 @@ public class DeploymentConfiguration implements ServletContextListener {
       } finally {
         em.close();
       }
+      
+      scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(new RateFacade(), 0, 1, TimeUnit.DAYS);
     } catch (PasswordStorage.CannotPerformOperationException ex) {
       Logger.getLogger(DeploymentConfiguration.class.getName()).log(Level.SEVERE, null, ex);
     }
@@ -79,5 +88,6 @@ public class DeploymentConfiguration implements ServletContextListener {
 
   @Override
   public void contextDestroyed(ServletContextEvent sce) {
+      scheduler.shutdownNow();
   }
 }

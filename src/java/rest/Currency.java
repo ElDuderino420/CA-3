@@ -7,7 +7,6 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import facades.RateFacade;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -16,7 +15,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
-import static javax.ws.rs.client.Entity.entity;
 
 /**
  * REST Web Service
@@ -44,13 +42,18 @@ public class Currency {
     @GET
     @Produces("application/json")
     @Path("/getRates")
-    public void getJson() {
-        //TODO return proper representation object
+    public String getJson() {
+        return gson.toJson(RateFacade.RatesToday());
         
         
         
     }
-
+    
+    @GET
+    @Path("/firstRun")
+    public void firstRun(){
+RateFacade.getRates();
+    }
     /**
      * PUT method for updating or creating an instance of Currency
      * @param content representation for the resource

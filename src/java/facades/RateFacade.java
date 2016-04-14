@@ -5,6 +5,8 @@
  */
 package facades;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import entity.DailyRate;
 import entity.Rate;
 import java.io.IOException;
@@ -28,22 +30,34 @@ public class RateFacade extends DefaultHandler implements Runnable{
     DailyRate currency;
     private static EntityManagerFactory emf = Persistence.createEntityManagerFactory(DeploymentConfiguration.PU_NAME);
 
-//    public static void inputRates() {
-//        EntityManager em = emf.createEntityManager();
-//        try {
-//            
-//            em.getTransaction().begin();
-//            user.setPassword(PasswordStorage.createHash(user.getPassword()));
-//            Role userRole = em.find(Role.class, "User");
-//            user.AddRole(userRole);
-//            em.persist(user);
-//            em.getTransaction().commit();
-//        } catch (PasswordStorage.CannotPerformOperationException ex) {
-//            Logger.getLogger(UserFacade.class.getName()).log(Level.SEVERE, null, ex);
-//        } finally {
-//            em.close();
-//        }
-//    }
+    public static JsonObject RatesToday() {
+        EntityManager em = emf.createEntityManager();
+        JsonObject jo = new JsonObject();
+        try {
+            em.getTransaction().begin();
+            Query q = em.createQuery("SELECT c FROM DailyRate c WHERE c.currentDate = :d");
+            q.setParameter("d", new Date());
+            List<DailyRate> res = q.getResultList();
+            em.getTransaction().commit();
+            JsonArray ja = new JsonArray();
+            if(!res.isEmpty()){
+            DailyRate dr = res.get(0);
+            List<Rate> rates = dr.getRateList();
+                for (int i = 0; i < dr.getRateList().size(); i++) {
+                    JsonObject rate = new JsonObject();
+                    rate.addProperty("code", rates.get(i).getCode());
+                    rate.addProperty("desc", rates.get(i).getDisc());
+                    rate.addProperty("rate", rates.get(i).getRate());
+                    ja.add(rate);
+                }
+            jo.addProperty("date", new Date().toString());
+            jo.add("rates", ja);
+            }
+        } finally {
+            em.close();
+        }
+        return jo;
+    }
     @Override
     public void startDocument() throws SAXException {
         System.out.println("Start Document (Sax-event)");
@@ -104,7 +118,7 @@ public class RateFacade extends DefaultHandler implements Runnable{
 
     }
 
-    public void getRates() {
+    public static void getRates() {
         try {
             XMLReader xr = XMLReaderFactory.createXMLReader();
             xr.setContentHandler(new RateFacade());
@@ -125,8 +139,7 @@ public class RateFacade extends DefaultHandler implements Runnable{
 
     @Override
     public void run() {
-        RateFacade rf = new RateFacade();
-        rf.getRates();
+        RateFacade.getRates();
     }
 
 
