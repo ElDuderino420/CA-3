@@ -1,16 +1,33 @@
 
 
-<div>
-    <h2>Currency rates of today</h2>
-    <div ng-app="myApp.view4" ng-controller="View4Ctrl"> 
 
+<div>
+    <h2>Currency rates for: {{tit}}</h2>
     <div>
-        <table>
-            <tr ng-repeat="x in rates">
-                <td>{{ x.code}}</td>
+<table ng-table="tableParams" class="table" show-filter="true">
+    <tr ng-repeat="rate in $data">
+        <td title="'Valuta'" filter="{ desc: 'text'}" sortable="'desc'">
+            {{rate.desc}}</td>
+        <td title="'ISO'" filter="{ code: 'text'}" sortable="'code'">
+            {{rate.code}}</td>
+        <td title="'Rate'" filter="{ rate: 'number'}" sortable="'rate'">
+            {{rate.rate}}</td>
+    </tr>
+</table>
+    </div>
+<!--    <div>
+        <table class="table table-condensed table-bordered">
+            <thead>
+            <th ng->Valuta</th>
+            <th style="width: 50px">ISO</th>
+            <th style="width: 50px">rate</th>
+            </thead>
+            <tr ng-repeat="x in res">
                 <td>{{ x.desc}}</td>
+                <td>{{ x.code}}</td>
                 <td>{{ x.rate}}</td>
             </tr>
         </table>
-    </div>
+        
+    </div>-->
     </div>

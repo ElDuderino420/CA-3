@@ -79,7 +79,7 @@ public class DeploymentConfiguration implements ServletContextListener {
       }
       
       scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(new RateFacade(), 0, 1, TimeUnit.DAYS);
+        scheduler.scheduleAtFixedRate(new RateFacade(), 0, 1, TimeUnit.HOURS);
     } catch (PasswordStorage.CannotPerformOperationException ex) {
       Logger.getLogger(DeploymentConfiguration.class.getName()).log(Level.SEVERE, null, ex);
     }

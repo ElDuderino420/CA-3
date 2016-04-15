@@ -16,7 +16,8 @@ angular.module('myApp', [
   'myApp.filters',
   'myApp.directives',
   'myApp.factories',
-  'myApp.services'
+  'myApp.services',
+  'ngTable'
 ]).
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/view1'});

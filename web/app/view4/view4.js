@@ -1,20 +1,24 @@
 'use strict';
 
-angular.module('myApp.view4', ['ngRoute'])
+angular.module('myApp.view4', ['ngRoute','ngTable'])
 
-.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/view4', {
-    templateUrl: 'app/view4/view4.html'
-  });
-}])
+        .config(['$routeProvider', function ($routeProvider) {
+                $routeProvider.when('/view4', {
+                    templateUrl: 'app/view4/view4.html',
+                    controller: 'View4Ctrl'
+                });
+            }])
 
-        .controller('View4Ctrl', function ($http, $scope) {
-            
-            http.get("http://ca-mb1337.rhcloud.com/SemesterSeed/api/Currency/getRates")
-    .then(function (response) {$scope.rates = response.data.rates;});
+        .controller('View4Ctrl', function ($http, $scope, NgTableParams) {
 
-            
-            
-
-
+            $http({  method: "GET",
+                    url: "http://localhost:8080/SemesterSeed/api/Currency/getRates",
+                    skipAuthorization: true
+            })
+                    .then(function (response) {
+                        $scope.res = response.data.rates;
+                        $scope.tit = response.data.date;
+                        var data = response.data.rates;
+                        $scope.tableParams = new NgTableParams({page: 1, count: 10}, { dataset: data});
+                    });
         });
