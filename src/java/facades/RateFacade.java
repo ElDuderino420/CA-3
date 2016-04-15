@@ -25,7 +25,7 @@ import openshift_deploy.DeploymentConfiguration;
  *
  * @author butwhole
  */
-public class RateFacade extends DefaultHandler implements Runnable{
+public class RateFacade extends DefaultHandler{
 
     DailyRate currency;
     private static EntityManagerFactory emf = Persistence.createEntityManagerFactory(DeploymentConfiguration.PU_NAME);
@@ -132,15 +132,11 @@ public class RateFacade extends DefaultHandler implements Runnable{
         
     }
 
-//    public static void main(String[] args) {
-//        RateFacade rf = new RateFacade();
-//        rf.getRates();
-//    }
-
-    @Override
-    public void run() {
+    public static void main(String[] args) {
         RateFacade.getRates();
     }
+
+   
 
 
     }
