@@ -33,6 +33,7 @@
     <hr style="background: black; border:0; height:2px" />
     <div ng-show="isFound">
         <h3>{{foundCompany.name}}</h3>
+        <h4>{{foundCompany.industrydesc}}</h4>
         <dl class="dl-horizontal">
             <dt>CVR-Number:</dt>
             <dd>{{foundCompany.vat}}</dd>
@@ -42,8 +43,13 @@
             <dd>{{foundCompany.zipcode}}</dd>
             <dt>City:</dt>
             <dd>{{foundCompany.city}}</dd>
+            <dt>Email:</dt>
+            <dd>{{foundCompany.email}}</dd>
+            <dt ng-show="isOwners">Owners:</dt>
+            <dd ng-show="isOwners" ng-repeat="owner in foundCompany.owners">{{owner.name}}</dd>
             <dt>Start Date:</dt>
             <dd>{{foundCompany.startdate}}</dd>
+            
         </dl>
         <h4>Production Units:</h4>
         <uib-accordion>

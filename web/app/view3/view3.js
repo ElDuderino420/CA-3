@@ -39,6 +39,10 @@ angular.module('myApp.view3', ['ngRoute'])
                 }).then(function successCallback(res) {
                     $scope.foundCompany = res.data;
                     $scope.isFound = true;
+                    $scope.isOwners = true;
+                    if($scope.foundCompany.owners === null){
+                        $scope.isOwners = false;
+                    }
                     if (res.data.error === "NO_SEARCH") {
                         $scope.isFound = false;
                         $scope.openErrorModal("Please input a valid search text");
