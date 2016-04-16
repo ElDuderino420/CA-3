@@ -12,7 +12,7 @@ angular.module('myApp.view4', ['ngRoute','ngTable'])
         .controller('View4Ctrl', function ($http, $scope, NgTableParams) {
             //ca-mb1337.rhcloud.com/SemesterSeed/api/Currency/getRates
             $http({  method: "GET",
-                    url: "/SemesterSeed/api/demouser/getRates"
+                    url: "/CA-3/api/demouser/getRates"
             })
                     .then(function (response) {
                         $scope.res = response.data.rates;
