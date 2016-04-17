@@ -47,7 +47,7 @@ private Gson gson;
     public String getCurrency(@PathParam("amount") double amount, @PathParam("fromcurrency") String fromCur, @PathParam("tocurrency") String toCur){
         JsonObject jo = new JsonObject();
         double temp = ((amount*CalculatorFacade.getCurrency(fromCur))/CalculatorFacade.getCurrency(toCur))*100.00;
-        jo.addProperty("amount: ", (Math.round(temp))/100.00);
+        jo.addProperty("amount", (Math.round(temp))/100.00);
         
         return gson.toJson(jo);
     }
