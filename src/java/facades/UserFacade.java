@@ -52,7 +52,7 @@ public class UserFacade implements IUserFacade {
         }
     }
     
-    public static User deleteUser(int id) {
+    public static User deleteUser(String id) {
        EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();

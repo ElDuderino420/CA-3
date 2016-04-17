@@ -11,7 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("admin")
-//@RolesAllowed("Admin")
+@RolesAllowed("Admin")
 public class Admin {
   
   @GET
@@ -25,7 +25,7 @@ public class Admin {
   @DELETE
   @Path("/user/{id}")
   @Produces("application/json")
-  public String deletePerson(@PathParam("id") int id) {
+  public String deletePerson(@PathParam("id") String id) {
       entity.User u = UserFacade.deleteUser(id);
       return JsonConverter.getJSON(JsonConverter.getAllUsers(u));
   }
