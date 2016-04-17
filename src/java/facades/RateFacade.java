@@ -82,7 +82,8 @@ public class RateFacade extends DefaultHandler{
 
         currency = new DailyRate();
         currency.setDate(new Date());
-
+        Rate dkk = new Rate("DKK","Danish Krone",100);
+        currency.addRate(dkk);
     }
 
     @Override
