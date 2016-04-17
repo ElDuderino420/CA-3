@@ -49,12 +49,14 @@ public class JsonConverter {
         return users;
     }
     
-    public static JsonArray getAllUsers(List<User> us){
+    public static JsonObject getAllUsers(List<User> us){
         JsonArray users = new JsonArray();
         for (User user : us) {
             users.add(getAllUsers(user));
         }
-        return users;
+        JsonObject test = new JsonObject();
+        test.add("users", users);
+        return test;
     }
     
     public static String getJSON(JsonElement voorhees) {
