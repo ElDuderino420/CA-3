@@ -20,13 +20,25 @@ angular.module('myApp.view4', ['ngRoute', 'ngTable'])
                         var data = response.data.rates;
                         $scope.tableParams = new NgTableParams({page: 1, count: 10}, {dataset: data});
                     });
-            $scope.calculate = function(){
-                $http({
-                    method: "GET",
-                    url: "/CA-3/api/demouser/calculator/"+$scope.fromAmount + "/" + $scope.fromValuta + "/" + $scope.toValuta
-                }).then(function(response){
-                    $scope.toAmount = response.data.amount;
-                });
-            }       
+            $scope.calculate = function () {
+                if ($scope.fromAmount != null || $scope.fromAmount.length !== 0) {
+                    $http({
+                        method: "GET",
+                        url: "/CA-3/api/demouser/calculator/" + $scope.fromAmount + "/" + $scope.fromValuta + "/" + $scope.toValuta
+                    }).then(function (response) {
+                        $scope.toAmount = response.data.amount;
+                    });
+                } 
+            };
+            $scope.calculate2 = function () {
+                if ($scope.toAmount != null || $scope.fromAmount !== 0) {
+                    $http({
+                        method: "GET",
+                        url: "/CA-3/api/demouser/calculator/" + $scope.toAmount + "/" + $scope.toValuta + "/" + $scope.fromValuta
+                    }).then(function (response) {
+                        $scope.fromAmount = response.data.amount;
+                    });
+                } 
+            };
         });
         
