@@ -53,9 +53,9 @@ public class NewEmptyJUnitTest {
         // go there and find 2 currencies to test
         // in this case 'AUD' and 'EUR'
         c1 = "AUD";
-        d1 = 508.01;
+        d1 = 506.76;
         c2 = "EUR";
-        d2 = 744.14;
+        d2 = 744.17;
         res = Math.round(((100*d1)/d2)*100.00)/100.00;
         
     }
